@@ -1,28 +1,24 @@
-type TokenType = str;
+type TokenType<'a> = &'a str;
 
-const ILLEGAL: &str = "ILLEGAL";
-const EOF: &str = "EOF";
-
-const IDENT: &str = "IDENT";
-const INT: &str = "INT";
-
-const ASSIGN: &str = "ASSIGN";
-const PLUS: &str = "PLUS";
-
-const COMMA: &str = "COMMA";
-const SEMICOLON: &str = "SEMICOLON";
-
-const LPAREN: &str = "LPAREN";
-const RPAREN: &str = "RPAREN";
-const LBRACE: &str = "LBRACE";
-const RBRACE: &str = "RBRACE";
-
-const FUNCTION: &str = "FUNCTION";
-const LET: &str = "LET";
-
-
-struct Token {
-    r#type: TokenType,
-    literal: String,
+pub struct Token<'a> {
+    pub r#type: TokenType<'a>,
+    pub literal: u8,
 }
+
+impl Token<'_> {
+    pub fn new<'a>() -> Token<'a> {
+        Token {
+            r#type: "",
+            literal: 0,
+        }
+    }
+
+    pub fn new_token<'a>(tok_type: &'a str, ch: u8) -> Token<'a> {
+        Token {
+            r#type: tok_type,
+            literal: ch,
+        }
+    }
+}
+
 
