@@ -13,7 +13,7 @@ impl Token<'_> {
         }
     }
 
-    pub fn new_token<'a>(tok_type: &'a str, ch: u8) -> Token<'a> {
+    pub fn new_token(tok_type: &str, ch: u8) -> Token {
         Token {
             r#type: tok_type,
             literal: ch,

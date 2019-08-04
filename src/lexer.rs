@@ -1,5 +1,6 @@
 use crate::token::Token;
 use crate::constants::{ASSIGN, SEMICOLON, LPAREN, RPAREN, COMMA, PLUS, LBRACE, RBRACE, EOF};
+use std::borrow::Borrow;
 
 pub struct Lexer<'a> {
     input: &'a str,
@@ -71,10 +72,34 @@ impl<'a> Lexer<'a> {
                 token = Token::new_token(EOF, 0);
             }
 
-            _ => {println!("UNBELIVABLE CHAR")}
+            _ => {
+                if self.ch.is_ascii_alphabetic() {
+//                    token = Token::new_token()
+                }
+            }
         }
 
         self.read_char();
         token
     }
+
+    pub fn read_identifier(&mut self) -> &'a str {
+        let position = self.position;
+        loop {
+            if self.ch.is_ascii_alphabetic() {
+                self.read_char();
+            } else {
+                break;
+            }
+        }
+        self.input.as_bytes()[position..self.position].
+    }
 }
+
+//pub fn is_letter(par:u8) -> bool {
+//    match *self {
+//        b'A'..=b'Z' | b'a'..=b'z' => true,
+//        _ => false
+//    }
+//
+//}
