@@ -1,19 +1,19 @@
-type TokenType<'a> = &'a str;
+type TokenType = String;
 
-pub struct Token<'a> {
-    pub r#type: TokenType<'a>,
+pub struct Token {
+    pub r#type: TokenType,
     pub literal: u8,
 }
 
-impl Token<'_> {
-    pub fn new<'a>() -> Token<'a> {
+impl Token {
+    pub fn new() -> Token {
         Token {
-            r#type: "",
+            r#type: "".to_string(),
             literal: 0,
         }
     }
 
-    pub fn new_token(tok_type: &str, ch: u8) -> Token {
+    pub fn new_token(tok_type: String, ch: u8) -> Token {
         Token {
             r#type: tok_type,
             literal: ch,

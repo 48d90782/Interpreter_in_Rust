@@ -1,16 +1,16 @@
 use crate::token::Token;
-use crate::constants::{ASSIGN, SEMICOLON, LPAREN, RPAREN, COMMA, PLUS, LBRACE, RBRACE, EOF};
+use crate::constants::{ASSIGN, SEMICOLON, LPAREN, RPAREN, COMMA, PLUS, LBRACE, RBRACE, EOF, INT, ILLEGAL};
 use std::borrow::Borrow;
 
-pub struct Lexer<'a> {
-    input: &'a str,
+pub struct Lexer {
+    input: String,
     position: usize,
     read_position: usize,
     ch: u8,
 }
 
-impl<'a> Lexer<'a> {
-    pub fn new(input: &str) -> Lexer {
+impl Lexer {
+    pub fn new(input: String) -> Lexer {
         Lexer {
             input,
             position: 0,
@@ -31,7 +31,7 @@ impl<'a> Lexer<'a> {
         }
 
         self.position = self.read_position;
-        self.read_position = self.read_position + 1;
+        self.read_position += 1;
     }
 
     ///
@@ -44,46 +44,50 @@ impl<'a> Lexer<'a> {
 
         match self.ch as char {
             '=' => {
-                token = Token::new_token(ASSIGN, self.ch);
+                token = Token::new_token(ASSIGN.parse::<String>().unwrap(), self.ch);
             }
             ';' => {
-                token = Token::new_token(SEMICOLON, self.ch);
+                token = Token::new_token(SEMICOLON.parse::<String>().unwrap(), self.ch);
             }
             '(' => {
-                token = Token::new_token(LPAREN, self.ch);
+                token = Token::new_token(LPAREN.parse::<String>().unwrap(), self.ch);
             }
             ')' => {
-                token = Token::new_token(RPAREN, self.ch);
+                token = Token::new_token(RPAREN.parse::<String>().unwrap(), self.ch);
             }
             ',' => {
-                token = Token::new_token(COMMA, self.ch);
+                token = Token::new_token(COMMA.parse::<String>().unwrap(), self.ch);
             }
             '+' => {
-                token = Token::new_token(PLUS, self.ch);
+                token = Token::new_token(PLUS.parse::<String>().unwrap(), self.ch);
             }
             '{' => {
-                token = Token::new_token(LBRACE, self.ch);
+                token = Token::new_token(LBRACE.parse::<String>().unwrap(), self.ch);
             }
             '}' => {
-                token = Token::new_token(RBRACE, self.ch);
+                token = Token::new_token(RBRACE.parse::<String>().unwrap(), self.ch);
             }
             '0' => {
-                token = Token::new_token(EOF, 0);
+                token = Token::new_token(EOF.parse::<String>().unwrap(), 0);
             }
-
             _ => {
                 if self.ch.is_ascii_alphabetic() {
-//                    token = Token::new_token()
+                    token = Token::new_token(self.read_identifier(), self.)
+                } else if self.ch.is_ascii_digit() {
+                    token = Token::new_token(INT.parse::<String>().unwrap(),
+                                             self.read_number().parse::<u8>().unwrap())
+                } else {
+                    token = Token::new_token(ILLEGAL.parse::<String>().unwrap(), self.ch)
                 }
             }
         }
 
         self.read_char();
-        token
+        return token;
     }
 
-    pub fn read_identifier(&mut self) -> &'a str {
-        let mut position = self.position;
+    pub fn read_identifier(&mut self) -> String {
+        let position = self.position;
         loop {
             if self.ch.is_ascii_alphabetic() {
                 self.read_char();
@@ -91,7 +95,19 @@ impl<'a> Lexer<'a> {
                 break;
             }
         }
-        self.input.as_bytes()[position.self.position]
+        self.input[position..self.position].to_string()
+    }
+
+    pub fn read_number(&mut self) -> String {
+        let position = self.position;
+        loop {
+            if self.ch.is_ascii_digit() {
+                self.read_char();
+            } else {
+                break;
+            }
+        }
+        self.input[position..self.position].to_string()
     }
 }
 

@@ -5,7 +5,7 @@ mod lexer;
 mod constants;
 
 fn main() {
-    let input:&str = ";";
+    let input:String = "let a".to_string();
 
     let mut l = Lexer::new(input);
     println!("{:?}", l.read_char());
