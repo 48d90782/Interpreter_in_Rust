@@ -46,7 +46,6 @@ impl<'a> Lexer<'a> {
             '=' => {
                 token = Token::new_token(ASSIGN, self.ch);
             }
-
             ';' => {
                 token = Token::new_token(SEMICOLON, self.ch);
             }
@@ -84,7 +83,7 @@ impl<'a> Lexer<'a> {
     }
 
     pub fn read_identifier(&mut self) -> &'a str {
-        let position = self.position;
+        let mut position = self.position;
         loop {
             if self.ch.is_ascii_alphabetic() {
                 self.read_char();
@@ -92,7 +91,7 @@ impl<'a> Lexer<'a> {
                 break;
             }
         }
-        self.input.as_bytes()[position..self.position].
+        self.input.as_bytes()[position.self.position]
     }
 }
 
