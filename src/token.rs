@@ -13,6 +13,7 @@ impl Token {
         Token {
             r#type: "".to_string(),
             literal: "".to_string(),
+            keywords: Default::default()
         }
     }
 
@@ -20,6 +21,7 @@ impl Token {
         Token {
             r#type: tok_type,
             literal: literal.to_string(),
+            keywords: Default::default()
         }
     }
 
@@ -27,6 +29,7 @@ impl Token {
         Token {
             r#type: tok_type,
             literal,
+            keywords: Default::default()
         }
     }
 
