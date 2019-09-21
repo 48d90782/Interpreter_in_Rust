@@ -43,8 +43,8 @@ impl Token {
     }
 
     pub fn lookup_ident(ident: String) -> TokenType {
-        let exist = HASHMAP.lock().unwrap().values().any(|value| value == &ident);
-        if exist {
+        // TODO read about how to return value in the `any` stm w/o unneeded second operation
+        if HASHMAP.lock().unwrap().values().any(|value| value == &ident) {
             return HASHMAP.lock().unwrap().get(&ident).unwrap().to_string();
         }
 
