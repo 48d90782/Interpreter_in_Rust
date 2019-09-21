@@ -42,6 +42,7 @@ impl Lexer {
     pub fn next_token(&mut self) -> Token {
         let mut token: Token = Token::new();
 
+        self.skip_whitespace();
 
         match self.ch as char {
             '=' => {
@@ -115,6 +116,26 @@ impl Lexer {
         }
         self.input[position..self.position].to_string()
     }
+
+    fn skip_whitespace(&mut self) {
+        match self.ch as char {
+            ' ' => {
+                self.read_char();
+            }
+            '\t' => {
+                self.read_char();
+            }
+            '\n' => {
+                self.read_char();
+            }
+            '\r' => {
+                self.read_char();
+            }
+            _ => {
+
+            }
+        }
+    }
 }
 
 #[cfg(test)]
@@ -122,6 +143,7 @@ mod lexer_test {
     use crate::lexer::Lexer;
     use crate::token::Token;
 
+    #[test]
     fn test_next_token() {
         let input: String =
             "let five = 5;
@@ -132,9 +154,14 @@ mod lexer_test {
     let result = add(five, ten);".to_string();
 
         let mut l = Lexer::new(input);
-
-        let mut t:Token;
-
-
+        let mut i = 0;
+        loop {
+            i += 1;
+            let tok = l.next_token();
+            println!("{:?}", tok);
+            if i == 10 {
+                break;
+            }
+        }
     }
 }

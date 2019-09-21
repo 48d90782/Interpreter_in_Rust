@@ -1,7 +1,7 @@
 use lazy_static::lazy_static;
 use std::collections::hash_map::HashMap;
 use std::sync::Mutex;
-use crate::constants::{LET, FUNCTION};
+use crate::constants::{LET, FUNCTION, IDENT};
 
 type TokenType = String;
 
@@ -14,6 +14,7 @@ static ref HASHMAP: Mutex<HashMap<String, TokenType>> = {
     };
 }
 
+#[derive(Debug, Clone)]
 pub struct Token {
     pub r#type: TokenType,
     pub literal: String,
@@ -42,7 +43,12 @@ impl Token {
     }
 
     pub fn lookup_ident(ident: String) -> TokenType {
-        HASHMAP.lock().unwrap().get(&ident).unwrap().to_string()
+        let exist = HASHMAP.lock().unwrap().values().any(|value| value == &ident);
+        if exist {
+            return HASHMAP.lock().unwrap().get(&ident).unwrap().to_string();
+        }
+
+        IDENT.to_string()
     }
 }
 
