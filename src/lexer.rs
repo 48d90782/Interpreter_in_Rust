@@ -12,12 +12,14 @@ pub struct Lexer {
 
 impl Lexer {
     pub fn new(input: String) -> Lexer {
-        Lexer {
+        let mut lexer = Lexer {
             input,
             position: 0,
             read_position: 0,
             ch: 0,
-        }
+        };
+        lexer.read_char();
+        lexer
     }
 
     /// read char
@@ -141,27 +143,22 @@ impl Lexer {
 #[cfg(test)]
 mod lexer_test {
     use crate::lexer::Lexer;
-    use crate::token::Token;
+    
 
     #[test]
     fn test_next_token() {
         let input: String =
             "let five = 5;
-    let ten = 10;
-    let add = fn(x, y) {
-        x + y;
-    };
-    let result = add(five, ten);".to_string();
+let ten = 10;
+let add = fn(x, y) {
+x + y;
+};
+let result = add(five, ten);".to_string();
 
         let mut l = Lexer::new(input);
-        let mut i = 0;
         loop {
-            i += 1;
             let tok = l.next_token();
             println!("{:?}", tok);
-            if i == 10 {
-                break;
-            }
         }
     }
 }
