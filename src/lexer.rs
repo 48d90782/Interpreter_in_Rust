@@ -7,7 +7,7 @@ pub struct Lexer {
     input: String,
     position: usize,
     read_position: usize,
-    ch: u8,
+    ch: u8, //TODO think about using Vec<u8> as byte. So, in that case we need no function new_token_string
 }
 
 impl Lexer {
@@ -92,7 +92,7 @@ impl Lexer {
         token
     }
 
-    pub fn read_identifier(&mut self) -> String {
+    fn read_identifier(&mut self) -> String {
         let position = self.position;
         loop {
             if self.ch.is_ascii_alphabetic() {
@@ -104,7 +104,7 @@ impl Lexer {
         self.input[position..self.position].to_string()
     }
 
-    pub fn read_number(&mut self) -> String {
+    fn read_number(&mut self) -> String {
         let position = self.position;
         loop {
             if self.ch.is_ascii_digit() {
@@ -117,10 +117,24 @@ impl Lexer {
     }
 }
 
-//pub fn is_letter(par:u8) -> bool {
-//    match *self {
-//        b'A'..=b'Z' | b'a'..=b'z' => true,
-//        _ => false
-//    }
-//
-//}
+#[cfg(test)]
+mod lexer_test {
+    use crate::lexer::Lexer;
+    use crate::token::Token;
+
+    fn test_next_token() {
+        let input: String =
+            "let five = 5;
+    let ten = 10;
+    let add = fn(x, y) {
+        x + y;
+    };
+    let result = add(five, ten);".to_string();
+
+        let mut l = Lexer::new(input);
+
+        let mut t:Token;
+
+
+    }
+}
