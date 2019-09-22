@@ -20,10 +20,6 @@ impl Lexer {
         lexer
     }
 
-    /// read char
-    ///
-    ///
-    ///
     pub fn read_char(&mut self) {
         if self.read_position >= self.input.len() {
             self.ch = '\0';
@@ -36,10 +32,6 @@ impl Lexer {
         self.read_position += 1;
     }
 
-    ///
-    ///
-    ///
-    ///
     pub fn next_token(&mut self) -> Token {
         let mut token: Token = Token::new();
 
@@ -49,54 +41,56 @@ impl Lexer {
             '=' => {
                 token = Token::new_token(
                     ASSIGN.parse::<String>().unwrap(),
-                    self.ch
+                    self.ch.to_string()
                 );
             }
             ';' => {
                 token = Token::new_token(
                     SEMICOLON.parse::<String>().unwrap(),
-                    self.ch
+                    self.ch.to_string()
                 );
             }
             '(' => {
                 token = Token::new_token(
                     LPAREN.parse::<String>().unwrap(),
-                    self.ch
+                    self.ch.to_string()
                 );
             }
             ')' => {
                 token = Token::new_token(
                     RPAREN.parse::<String>().unwrap(),
-                    self.ch
+                    self.ch.to_string()
                 );
             }
             ',' => {
                 token = Token::new_token(
                     COMMA.parse::<String>().unwrap(),
-                    self.ch
+                    self.ch.to_string()
                 );
             }
             '+' => {
                 token = Token::new_token(
                     PLUS.parse::<String>().unwrap(),
-                    self.ch
+                    self.ch.to_string()
                 );
             }
             '{' => {
                 token = Token::new_token(
                     LBRACE.parse::<String>().unwrap(),
-                    self.ch
+                    self.ch.to_string()
                 );
             }
             '}' => {
                 token = Token::new_token(
                     RBRACE.parse::<String>().unwrap(),
-                    self.ch);
+                    self.ch.to_string()
+                );
             }
+            // null char meaning EOF
             '\0' => {
                 token = Token::new_token(
                     EOF.parse::<String>().unwrap(),
-                    '\0'
+                    '\0'.to_string()
                 );
             }
             _ => {
@@ -107,18 +101,18 @@ impl Lexer {
                     // if not - this is IDENT
                     let literal = self.read_identifier();
                     let tok_type = Token::lookup_ident(literal.clone());
-                    token = Token::new_token_string(tok_type.to_string().clone(), literal.clone());
+                    token = Token::new_token(tok_type.to_string().clone(), literal.clone());
                     return token;
                 } else if self.ch.is_ascii_digit() {
                     // TODO think about float, decimals and other (i32,i64)
                     // Now only INT type supported
                     let tok_type = INT.parse::<String>().unwrap();
                     let literal = self.read_number();
-                    token = Token::new_token_string(tok_type.clone(), literal.clone());
+                    token = Token::new_token(tok_type.clone(), literal.clone());
                     return token;
                 } else {
                     // the last chance --> ILLEGAL input
-                    token = Token::new_token(ILLEGAL.parse::<String>().unwrap(), self.ch)
+                    token = Token::new_token(ILLEGAL.parse::<String>().unwrap(), self.ch.to_string())
                 }
             }
         }
@@ -194,43 +188,43 @@ let result = add(five, ten);".to_string();
         let mut l = Lexer::new(input);
 
         let tokens: [Token; 37] = [
-            Token::new_token_string(LET.to_string(), "let".to_string()),
-            Token::new_token_string(IDENT.to_string(), "five".to_string()),
-            Token::new_token_string(ASSIGN.to_string(), "=".to_string()),
-            Token::new_token_string(INT.to_string(), "5".to_string()),
-            Token::new_token_string(SEMICOLON.to_string(), ";".to_string()),
-            Token::new_token_string(LET.to_string(), "let".to_string()),
-            Token::new_token_string(IDENT.to_string(), "ten".to_string()),
-            Token::new_token_string(ASSIGN.to_string(), "=".to_string()),
-            Token::new_token_string(INT.to_string(), "10".to_string()),
-            Token::new_token_string(SEMICOLON.to_string(), ";".to_string()),
-            Token::new_token_string(LET.to_string(), "let".to_string()),
-            Token::new_token_string(IDENT.to_string(), "add".to_string()),
-            Token::new_token_string(ASSIGN.to_string(), "=".to_string()),
-            Token::new_token_string(FUNCTION.to_string(), "fn".to_string()),
-            Token::new_token_string(LPAREN.to_string(), "(".to_string()),
-            Token::new_token_string(IDENT.to_string(), "x".to_string()),
-            Token::new_token_string(COMMA.to_string(), ",".to_string()),
-            Token::new_token_string(IDENT.to_string(), "y".to_string()),
-            Token::new_token_string(RPAREN.to_string(), ")".to_string()),
-            Token::new_token_string(LBRACE.to_string(), "{".to_string()),
-            Token::new_token_string(IDENT.to_string(), "x".to_string()),
-            Token::new_token_string(PLUS.to_string(), "+".to_string()),
-            Token::new_token_string(IDENT.to_string(), "y".to_string()),
-            Token::new_token_string(SEMICOLON.to_string(), ";".to_string()),
-            Token::new_token_string(RBRACE.to_string(), "}".to_string()),
-            Token::new_token_string(SEMICOLON.to_string(), ";".to_string()),
-            Token::new_token_string(LET.to_string(), "let".to_string()),
-            Token::new_token_string(IDENT.to_string(), "result".to_string()),
-            Token::new_token_string(ASSIGN.to_string(), "=".to_string()),
-            Token::new_token_string(IDENT.to_string(), "add".to_string()),
-            Token::new_token_string(LPAREN.to_string(), "(".to_string()),
-            Token::new_token_string(IDENT.to_string(), "five".to_string()),
-            Token::new_token_string(COMMA.to_string(), ",".to_string()),
-            Token::new_token_string(IDENT.to_string(), "ten".to_string()),
-            Token::new_token_string(RPAREN.to_string(), ")".to_string()),
-            Token::new_token_string(SEMICOLON.to_string(), ";".to_string()),
-            Token::new_token_string(EOF.to_string(), "\0".to_string()),
+            Token::new_token(LET.to_string(), "let".to_string()),
+            Token::new_token(IDENT.to_string(), "five".to_string()),
+            Token::new_token(ASSIGN.to_string(), "=".to_string()),
+            Token::new_token(INT.to_string(), "5".to_string()),
+            Token::new_token(SEMICOLON.to_string(), ";".to_string()),
+            Token::new_token(LET.to_string(), "let".to_string()),
+            Token::new_token(IDENT.to_string(), "ten".to_string()),
+            Token::new_token(ASSIGN.to_string(), "=".to_string()),
+            Token::new_token(INT.to_string(), "10".to_string()),
+            Token::new_token(SEMICOLON.to_string(), ";".to_string()),
+            Token::new_token(LET.to_string(), "let".to_string()),
+            Token::new_token(IDENT.to_string(), "add".to_string()),
+            Token::new_token(ASSIGN.to_string(), "=".to_string()),
+            Token::new_token(FUNCTION.to_string(), "fn".to_string()),
+            Token::new_token(LPAREN.to_string(), "(".to_string()),
+            Token::new_token(IDENT.to_string(), "x".to_string()),
+            Token::new_token(COMMA.to_string(), ",".to_string()),
+            Token::new_token(IDENT.to_string(), "y".to_string()),
+            Token::new_token(RPAREN.to_string(), ")".to_string()),
+            Token::new_token(LBRACE.to_string(), "{".to_string()),
+            Token::new_token(IDENT.to_string(), "x".to_string()),
+            Token::new_token(PLUS.to_string(), "+".to_string()),
+            Token::new_token(IDENT.to_string(), "y".to_string()),
+            Token::new_token(SEMICOLON.to_string(), ";".to_string()),
+            Token::new_token(RBRACE.to_string(), "}".to_string()),
+            Token::new_token(SEMICOLON.to_string(), ";".to_string()),
+            Token::new_token(LET.to_string(), "let".to_string()),
+            Token::new_token(IDENT.to_string(), "result".to_string()),
+            Token::new_token(ASSIGN.to_string(), "=".to_string()),
+            Token::new_token(IDENT.to_string(), "add".to_string()),
+            Token::new_token(LPAREN.to_string(), "(".to_string()),
+            Token::new_token(IDENT.to_string(), "five".to_string()),
+            Token::new_token(COMMA.to_string(), ",".to_string()),
+            Token::new_token(IDENT.to_string(), "ten".to_string()),
+            Token::new_token(RPAREN.to_string(), ")".to_string()),
+            Token::new_token(SEMICOLON.to_string(), ";".to_string()),
+            Token::new_token(EOF.to_string(), "\0".to_string()),
         ];
 
         for t in tokens.iter() {

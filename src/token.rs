@@ -3,6 +3,7 @@ use std::collections::hash_map::HashMap;
 use std::sync::Mutex;
 use crate::constants::{LET, FUNCTION, IDENT};
 
+// TODO maybe not String but &str ???
 type TokenType = String;
 
 lazy_static! {
@@ -28,14 +29,7 @@ impl Token {
         }
     }
 
-    pub fn new_token(tok_type: TokenType, literal: char) -> Token {
-        Token {
-            r#type: tok_type,
-            literal: literal.to_string(),
-        }
-    }
-
-    pub fn new_token_string(tok_type: TokenType, literal: String) -> Token {
+    pub fn new_token(tok_type: TokenType, literal: String) -> Token {
         Token {
             r#type: tok_type,
             literal,
@@ -53,9 +47,6 @@ impl Token {
         }
     }
 
-//    fn eq(&self, other: &U) -> bool {
-//
-//    }
 }
 
 impl PartialEq for Token {
