@@ -41,7 +41,6 @@ impl Lexer {
     ///
     ///
     pub fn next_token(&mut self) -> Token {
-        std::str::from_utf8;
         let mut token: Token = Token::new();
 
         self.skip_whitespace();
@@ -102,16 +101,23 @@ impl Lexer {
             }
             _ => {
                 if self.ch.is_ascii_alphabetic() {
+                    // if this is not a one of the predefined tokens
+                    // read all from whitespace to whitespace _ some_input _
+                    // then we check if this is keyword
+                    // if not - this is IDENT
                     let literal = self.read_identifier();
                     let tok_type = Token::lookup_ident(literal.clone());
                     token = Token::new_token_string(tok_type.to_string().clone(), literal.clone());
                     return token;
                 } else if self.ch.is_ascii_digit() {
+                    // TODO think about float, decimals and other (i32,i64)
+                    // Now only INT type supported
                     let tok_type = INT.parse::<String>().unwrap();
                     let literal = self.read_number();
                     token = Token::new_token_string(tok_type.clone(), literal.clone());
                     return token;
                 } else {
+                    // the last chance --> ILLEGAL input
                     token = Token::new_token(ILLEGAL.parse::<String>().unwrap(), self.ch)
                 }
             }
@@ -172,7 +178,7 @@ impl Lexer {
 mod lexer_test {
     use crate::lexer::Lexer;
     use crate::token::Token;
-    use crate::constants::{ILLEGAL, LET, IDENT, ASSIGN, INT, SEMICOLON, FUNCTION, LPAREN, COMMA, RPAREN, LBRACE, PLUS, RBRACE, EOF};
+    use crate::constants::{LET, IDENT, ASSIGN, INT, SEMICOLON, FUNCTION, LPAREN, COMMA, RPAREN, LBRACE, PLUS, RBRACE, EOF};
 
 
     #[test]
