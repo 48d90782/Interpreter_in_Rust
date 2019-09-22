@@ -1,5 +1,5 @@
 use crate::token::Token;
-use crate::constants::{ASSIGN, SEMICOLON, LPAREN, RPAREN, COMMA, PLUS, LBRACE, RBRACE, EOF, INT, ILLEGAL};
+use crate::constants::{ASSIGN, SEMICOLON, LPAREN, RPAREN, COMMA, PLUS, LBRACE, RBRACE, EOF, INT, ILLEGAL, MINUS, BANG, ASTERISK, SLASH, LT, GT, EQ, NOT_EQ};
 
 pub struct Lexer {
     input: String,
@@ -14,7 +14,7 @@ impl Lexer {
             input,
             position: 0,
             read_position: 0,
-            ch: '0',
+            ch: '\0',
         };
         lexer.read_char();
         lexer
@@ -39,10 +39,15 @@ impl Lexer {
 
         match self.ch {
             '=' => {
-                token = Token::new_token(
-                    ASSIGN.parse::<String>().unwrap(),
-                    self.ch.to_string()
-                );
+                if self.peek_char() == '=' {
+                    self.read_char(); // move read position
+                    token = Token::new_token(EQ.parse::<String>().unwrap(), "==".to_string());
+                } else {
+                    token = Token::new_token(
+                        ASSIGN.parse::<String>().unwrap(),
+                        self.ch.to_string()
+                    );
+                }
             }
             ';' => {
                 token = Token::new_token(
@@ -86,6 +91,51 @@ impl Lexer {
                     self.ch.to_string()
                 );
             }
+            '-' => {
+                token = Token::new_token(
+                    MINUS.parse::<String>().unwrap(),
+                    self.ch.to_string()
+                );
+            }
+            '!' => {
+                // != input case
+                if self.peek_char() == '=' {
+                    self.read_char();
+                    token = Token::new_token(
+                        NOT_EQ.parse::<String>().unwrap(),
+                        "!=".to_string()
+                    );
+                } else {
+                    token = Token::new_token(
+                        BANG.parse::<String>().unwrap(),
+                        self.ch.to_string()
+                    );
+                }
+            }
+            '*' => {
+                token = Token::new_token(
+                    ASTERISK.parse::<String>().unwrap(),
+                    self.ch.to_string()
+                );
+            }
+            '/' => {
+                token = Token::new_token(
+                    SLASH.parse::<String>().unwrap(),
+                    self.ch.to_string()
+                );
+            }
+            '<' => {
+                token = Token::new_token(
+                    LT.parse::<String>().unwrap(),
+                    self.ch.to_string()
+                );
+            }
+            '>' => {
+                token = Token::new_token(
+                    GT.parse::<String>().unwrap(),
+                    self.ch.to_string()
+                );
+            }
             // null char meaning EOF
             '\0' => {
                 token = Token::new_token(
@@ -119,6 +169,14 @@ impl Lexer {
 
         self.read_char();
         token
+    }
+
+    fn peek_char(&mut self) -> char {
+        if self.read_position >= self.input.len() {
+            return '\0'
+        }
+        let (_, ch) = self.input.char_indices().nth(self.read_position).unwrap();
+        ch
     }
 
     fn read_identifier(&mut self) -> String {
@@ -172,7 +230,7 @@ impl Lexer {
 mod lexer_test {
     use crate::lexer::Lexer;
     use crate::token::Token;
-    use crate::constants::{LET, IDENT, ASSIGN, INT, SEMICOLON, FUNCTION, LPAREN, COMMA, RPAREN, LBRACE, PLUS, RBRACE, EOF};
+    use crate::constants::{LET, IDENT, ASSIGN, INT, SEMICOLON, FUNCTION, LPAREN, COMMA, RPAREN, LBRACE, PLUS, RBRACE, EOF, BANG, MINUS, SLASH, ASTERISK, LT, GT, EQ, NOT_EQ};
 
 
     #[test]
@@ -183,11 +241,15 @@ let ten = 10;
 let add = fn(x, y) {
 x + y;
 };
-let result = add(five, ten);".to_string();
+let result = add(five, ten);
+!-/*5;
+5 < 10 > 5;
+10 == 10;
+10 != 9;".to_string();
 
         let mut l = Lexer::new(input);
 
-        let tokens: [Token; 37] = [
+        let tokens: [Token; 57] = [
             Token::new_token(LET.to_string(), "let".to_string()),
             Token::new_token(IDENT.to_string(), "five".to_string()),
             Token::new_token(ASSIGN.to_string(), "=".to_string()),
@@ -224,6 +286,30 @@ let result = add(five, ten);".to_string();
             Token::new_token(IDENT.to_string(), "ten".to_string()),
             Token::new_token(RPAREN.to_string(), ")".to_string()),
             Token::new_token(SEMICOLON.to_string(), ";".to_string()),
+
+            Token::new_token(BANG.to_string(), "!".to_string()),
+            Token::new_token(MINUS.to_string(), "-".to_string()),
+            Token::new_token(SLASH.to_string(), "/".to_string()),
+            Token::new_token(ASTERISK.to_string(), "*".to_string()),
+            Token::new_token(INT.to_string(), "5".to_string()),
+            Token::new_token(SEMICOLON.to_string(), ";".to_string()),
+
+            Token::new_token(INT.to_string(), "5".to_string()),
+            Token::new_token(LT.to_string(), "<".to_string()),
+            Token::new_token(INT.to_string(), "10".to_string()),
+            Token::new_token(GT.to_string(), ">".to_string()),
+            Token::new_token(INT.to_string(), "5".to_string()),
+            Token::new_token(SEMICOLON.to_string(), ";".to_string()),
+
+            Token::new_token(INT.to_string(), "10".to_string()),
+            Token::new_token(EQ.to_string(), "==".to_string()),
+            Token::new_token(INT.to_string(), "10".to_string()),
+            Token::new_token(SEMICOLON.to_string(), ";".to_string()),
+            Token::new_token(INT.to_string(), "10".to_string()),
+            Token::new_token(NOT_EQ.to_string(), "!=".to_string()),
+            Token::new_token(INT.to_string(), "9".to_string()),
+            Token::new_token(SEMICOLON.to_string(), ";".to_string()),
+
             Token::new_token(EOF.to_string(), "\0".to_string()),
         ];
 

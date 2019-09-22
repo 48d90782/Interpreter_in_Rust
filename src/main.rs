@@ -3,6 +3,7 @@ use crate::lexer::Lexer;
 mod token;
 mod lexer;
 mod constants;
+mod repl;
 
 fn main() {
     let input:String = "5".to_string();
