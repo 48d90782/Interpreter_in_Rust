@@ -143,7 +143,7 @@ impl Lexer {
 #[cfg(test)]
 mod lexer_test {
     use crate::lexer::Lexer;
-    
+
 
     #[test]
     fn test_next_token() {

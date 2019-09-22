@@ -2,6 +2,7 @@ use lazy_static::lazy_static;
 use std::collections::hash_map::HashMap;
 use std::sync::Mutex;
 use crate::constants::{LET, FUNCTION, IDENT};
+use std::borrow::Borrow;
 
 type TokenType = String;
 
@@ -43,12 +44,14 @@ impl Token {
     }
 
     pub fn lookup_ident(ident: String) -> TokenType {
-        // TODO read about how to return value in the `any` stm w/o unneeded second operation
-        if HASHMAP.lock().unwrap().values().any(|value| value == &ident) {
-            return HASHMAP.lock().unwrap().get(&ident).unwrap().to_string();
+        match HASHMAP.lock().unwrap().get(&ident) {
+            Some(val) => {
+                val.clone()
+            }
+            _ => {
+                IDENT.to_string()
+            }
         }
-
-        IDENT.to_string()
     }
 }
 
