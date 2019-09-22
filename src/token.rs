@@ -2,7 +2,6 @@ use lazy_static::lazy_static;
 use std::collections::hash_map::HashMap;
 use std::sync::Mutex;
 use crate::constants::{LET, FUNCTION, IDENT};
-use std::borrow::Borrow;
 
 type TokenType = String;
 
@@ -29,7 +28,7 @@ impl Token {
         }
     }
 
-    pub fn new_token(tok_type: TokenType, literal: u8) -> Token {
+    pub fn new_token(tok_type: TokenType, literal: char) -> Token {
         Token {
             r#type: tok_type,
             literal: literal.to_string(),
@@ -52,6 +51,20 @@ impl Token {
                 IDENT.to_string()
             }
         }
+    }
+
+//    fn eq(&self, other: &U) -> bool {
+//
+//    }
+}
+
+impl PartialEq for Token {
+    fn eq(&self, other: &Self) -> bool {
+        if (self.r#type == other.r#type)
+            && (self.literal == other.literal) {
+            return true;
+        }
+        false
     }
 }
 
