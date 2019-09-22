@@ -9,9 +9,10 @@ pub fn start() {
         let _ = io::stdout().flush();
         io::stdin().read_line(&mut input).expect("Error reading line!");
 
-        if input == "exit" {
+        if input == "exit\n" {
             break
         }
+
         let mut l = Lexer::new(input);
 
         loop {
