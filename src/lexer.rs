@@ -1,5 +1,5 @@
 use crate::token::Token;
-use crate::constants::{ASSIGN, SEMICOLON, LPAREN, RPAREN, COMMA, PLUS, LBRACE, RBRACE, EOF, INT, ILLEGAL, MINUS, BANG, ASTERISK, SLASH, LT, GT, EQ, NOT_EQ};
+use crate::token::{ASSIGN, SEMICOLON, LPAREN, RPAREN, COMMA, PLUS, LBRACE, RBRACE, EOF, INT, ILLEGAL, MINUS, BANG, ASTERISK, SLASH, LT, GT, EQ, NOT_EQ};
 
 pub struct Lexer {
     input: String,
@@ -229,8 +229,8 @@ impl Lexer {
 #[cfg(test)]
 mod lexer_test {
     use crate::lexer::Lexer;
-    use crate::token::Token;
-    use crate::constants::{LET, IDENT, ASSIGN, INT, SEMICOLON, FUNCTION, LPAREN, COMMA, RPAREN, LBRACE, PLUS, RBRACE, EOF, BANG, MINUS, SLASH, ASTERISK, LT, GT, EQ, NOT_EQ};
+    use crate::token::{Token, IF, RETURN, TRUE, ELSE, FALSE};
+    use crate::token::{LET, IDENT, ASSIGN, INT, SEMICOLON, FUNCTION, LPAREN, COMMA, RPAREN, LBRACE, PLUS, RBRACE, EOF, BANG, MINUS, SLASH, ASTERISK, LT, GT, EQ, NOT_EQ};
 
 
     #[test]
@@ -245,11 +245,16 @@ let result = add(five, ten);
 !-/*5;
 5 < 10 > 5;
 10 == 10;
-10 != 9;".to_string();
+10 != 9;
+if (5 < 10) {
+return true;
+} else {
+return false;
+}".to_string();
 
         let mut l = Lexer::new(input);
 
-        let tokens: [Token; 57] = [
+        let tokens: [Token; 74] = [
             Token::new_token(LET.to_string(), "let".to_string()),
             Token::new_token(IDENT.to_string(), "five".to_string()),
             Token::new_token(ASSIGN.to_string(), "=".to_string()),
@@ -309,6 +314,24 @@ let result = add(five, ten);
             Token::new_token(NOT_EQ.to_string(), "!=".to_string()),
             Token::new_token(INT.to_string(), "9".to_string()),
             Token::new_token(SEMICOLON.to_string(), ";".to_string()),
+
+            Token::new_token(IF.to_string(), "if".to_string()),
+            Token::new_token(LPAREN.to_string(), "(".to_string()),
+            Token::new_token(INT.to_string(), "5".to_string()),
+            Token::new_token(LT.to_string(), "<".to_string()),
+            Token::new_token(INT.to_string(), "10".to_string()),
+            Token::new_token(RPAREN.to_string(), ")".to_string()),
+            Token::new_token(LBRACE.to_string(), "{".to_string()),
+            Token::new_token(RETURN.to_string(), "return".to_string()),
+            Token::new_token(TRUE.to_string(), "true".to_string()),
+            Token::new_token(SEMICOLON.to_string(), ";".to_string()),
+            Token::new_token(RBRACE.to_string(), "}".to_string()),
+            Token::new_token(ELSE.to_string(), "else".to_string()),
+            Token::new_token(LBRACE.to_string(), "{".to_string()),
+            Token::new_token(RETURN.to_string(), "return".to_string()),
+            Token::new_token(FALSE.to_string(), "false".to_string()),
+            Token::new_token(SEMICOLON.to_string(), ";".to_string()),
+            Token::new_token(RBRACE.to_string(), "}".to_string()),
 
             Token::new_token(EOF.to_string(), "\0".to_string()),
         ];

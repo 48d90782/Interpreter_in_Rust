@@ -1,6 +1,6 @@
 use std::io::{self, Write};
 use crate::lexer::Lexer;
-use crate::constants::EOF;
+use crate::token::EOF;
 
 pub fn start() {
     loop {
