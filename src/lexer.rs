@@ -151,14 +151,14 @@ impl Lexer {
                     // if not - this is IDENT
                     let literal = self.read_identifier();
                     let tok_type = Token::lookup_ident(literal.clone());
-                    token = Token::new_token(tok_type.to_string().clone(), literal.clone());
+                    token = Token::new_token(tok_type, literal);
                     return token;
                 } else if self.ch.is_ascii_digit() {
                     // TODO think about float, decimals and other (i32,i64)
                     // Now only INT type supported
                     let tok_type = INT.parse::<String>().unwrap();
                     let literal = self.read_number();
-                    token = Token::new_token(tok_type.clone(), literal.clone());
+                    token = Token::new_token(tok_type, literal);
                     return token;
                 } else {
                     // the last chance --> ILLEGAL input

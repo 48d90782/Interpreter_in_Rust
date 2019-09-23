@@ -87,7 +87,6 @@ impl Token {
             }
         }
     }
-
 }
 
 impl PartialEq for Token {
