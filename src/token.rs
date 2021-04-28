@@ -1,71 +1,62 @@
-use lazy_static::lazy_static;
-use std::collections::hash_map::HashMap;
-use std::sync::Mutex;
+#[derive(Debug, Copy, Clone)]
+pub enum Token {
+    ILLEGAL,
+    EOF,
 
-pub const ILLEGAL: &str = "ILLEGAL";
-pub const EOF: &str = "EOF";
+    // identifiers and literals
+    IDENT(String),
+    INT,
 
-// identifiers and literals
-pub const IDENT: &str = "IDENT";
-pub const INT: &str = "INT";
-
-// operators
-pub enum Operators<'a> {
-    ASSIGN(&'a str),
-    PLUG(&'a str),
-    MINUS(&'a str),
-    BANG(&'a str),
-    ASTERISK(&'a str),
+    // operators
+    ASSIGN,
+    PLUG,
+    MINUS,
+    BANG,
+    ASTERISK,
     SLASH,
     LT,
     GT,
     EQ,
     NOT_EQ,
+
+    // delimiters
+    COMMA,
+    SEMICOLON,
+
+    LPAREN,
+    RPAREN,
+    LBRACE,
+    RBRACE,
+
+    // keywords
+    FUNCTION,
+    LET,
+    TRUE,
+    FALSE,
+    IF,
+    ELSE,
+    RETURN,
 }
 
-// pub const ASSIGN: &str = "=";
-// pub const PLUS: &str = "+";
-// pub const MINUS: &str = "-";
-// pub const BANG: &str = "!";
-// pub const ASTERISK: &str = "*";
-// pub const SLASH: &str = "/";
-// pub const LT: &str = "<";
-// pub const GT: &str = ">";
-// pub const EQ: &str = "==";
-// pub const NOT_EQ: &str = "!=";
 
 // delimiters
-pub const COMMA: &str = "COMMA";
-pub const SEMICOLON: &str = "SEMICOLON";
-
-pub const LPAREN: &str = "LPAREN";
-pub const RPAREN: &str = "RPAREN";
-pub const LBRACE: &str = "LBRACE";
-pub const RBRACE: &str = "RBRACE";
-
-// keywords
-pub const FUNCTION: &str = "FUNCTION";
-pub const LET: &str = "LET";
-pub const TRUE: &str = "TRUE";
-pub const FALSE: &str = "FALSE";
-pub const IF: &str = "IF";
-pub const ELSE: &str = "ELSE";
-pub const RETURN: &str = "RETURN";
+#[derive(Debug, Copy, Clone)]
+pub enum Delimiters {}
 
 // TODO maybe not String but &str ???
-type TokenType<'a> = &'a str;
+type TokenType = String;
 
 // lazy_static! {
-// static ref HASHMAP<'a> : Mutex<HashMap<String, TokenType<'a>>> = {
-//     let mut m = HashMap::new();
-//     m.insert("let".to_string(), LET);
-//     m.insert("fn".to_string(), FUNCTION);
-//     m.insert("true".to_string(), TRUE);
-//     m.insert("false".to_string(), FALSE);
-//     m.insert("if".to_string(), IF);
-//     m.insert("else".to_string(), ELSE);
-//     m.insert("return".to_string(), RETURN);
-//     Mutex::new(m)
+//     static ref HASHMAP: Mutex<HashMap<String, TokenType>> = {
+//         let mut m = HashMap::new();
+//         m.insert("let".to_string(), LET);
+//         m.insert("fn".to_string(), FUNCTION);
+//         m.insert("true".to_string(), TRUE);
+//         m.insert("false".to_string(), FALSE);
+//         m.insert("if".to_string(), IF);
+//         m.insert("else".to_string(), ELSE);
+//         m.insert("return".to_string(), RETURN);
+//         Mutex::new(m)
 //     };
 // }
 
@@ -92,24 +83,17 @@ impl Token {
 
     pub fn lookup_ident(ident: String) -> TokenType {
         match HASHMAP.lock().unwrap().get(&ident) {
-            Some(val) => {
-                val.clone()
-            }
-            _ => {
-                IDENT.to_string()
-            }
+            Some(val) => val.clone(),
+            _ => IDENT.to_string(),
         }
     }
 }
 
 impl PartialEq for Token {
     fn eq(&self, other: &Self) -> bool {
-        if (self.r#type == other.r#type)
-            && (self.literal == other.literal) {
+        if (self.r#type == other.r#type) && (self.literal == other.literal) {
             return true;
         }
         false
     }
 }
-
-
